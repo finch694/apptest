@@ -42,7 +42,7 @@ class Apple extends Apples
 
     public function afterFind()
     {
-        parent::afterFind(); 
+        parent::afterFind();
         $this->accidentalFall();
         $this->eatBehavior = (new EatFactory())->detectEatBehavior($this);
     }
