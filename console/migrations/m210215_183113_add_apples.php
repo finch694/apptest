@@ -16,10 +16,10 @@ class m210215_183113_add_apples extends Migration
         $this->createTable($this->tableName,[
             'id'=>$this->primaryKey(),
             'color'=>$this->string()->notNull(),
-            'status_id'=>$this->integer()->notNull()->defaultValue(1),
+            'status_id'=>$this->integer()->notNull(),
             'integrity'=>$this->float()->defaultValue(1),
-            'createAt'=>$this->integer()->notNull()->defaultExpression("extract(epoch from now())"),
-            'fallAt'=>$this->integer()->defaultValue(null)
+            'createAt'=>$this->integer()->defaultExpression("extract(epoch from now())"),
+            'fallAt'=>$this->integer()
         ]);
         $this->addForeignKey(
             'status_id',
