@@ -36,7 +36,6 @@ class ApplesController extends Controller
      */
     public function actionIndex()
     {
-//        $testApple = new Apple();
         $searchModel = new ApplesSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
@@ -67,14 +66,16 @@ class ApplesController extends Controller
     public function actionCreate()
     {
         $model = new Apple();
-        $model->status_id = 1;
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
-        }
-
-        return $this->render('create', [
-            'model' => $model,
-        ]);
+//        $model->status_id = 1;
+//        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+//            return $this->redirect(['view', 'id' => $model->id]);
+//        }
+//
+//        return $this->render('create', [
+//            'model' => $model,
+//        ]);
+        $model->save();
+        return $this->redirect(['index']);
     }
 
     /**
@@ -84,8 +85,28 @@ class ApplesController extends Controller
      */
     public function actionEat(int $id, int $part)
     {
-        $testApple = Apple::find()->where(['id'=>$id])->one();
-        $testApple->eat($part);
+        $apple = Apple::find()->where(['id' => $id])->one();
+        $apple->eat($part);
+        return $this->redirect(['index']);
+
+    }
+
+    public function actionModal($id)
+    {
+        $model = Apple::find()->where(['id' => $id])->one();
+        return $this->renderAjax('modalEat', ['model' => $model]);
+    }
+
+    /**
+     * @param int $id
+     * @return \yii\web\Response
+     */
+    public function actionFall(int $id)
+    {
+        $apple = Apple::find()->where(['id' => $id])->one();
+        $apple->fall();
+        return $this->redirect(['index']);
+
     }
 
     /**

@@ -26,6 +26,13 @@ class Apple extends Apples
         return $this->fallAt + 5 * 3600 >= time() && $this->status_id === 2;
     }
 
+    public function __construct($config = [])
+    {
+        $this->color = $this->randomColor();
+        $this->status_id = 1;
+        parent::__construct($config);
+    }
+
     public function fall()
     {
         $this->status_id = 2;
@@ -61,5 +68,10 @@ class Apple extends Apples
     public function getColor()
     {
         return $this->color;
+    }
+
+    private function randomColor()
+    {
+        return sprintf('#%02X%02X%02X', rand(100, 255), rand(100, 255), '80');
     }
 }
