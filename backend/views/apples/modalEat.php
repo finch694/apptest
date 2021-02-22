@@ -14,7 +14,8 @@ $this->title = 'Enter percentage of apple bite off:';
     <h3><?= Html::encode($this->title) ?></h3>
 
     <?php $form = ActiveForm::begin([
-        'method' => 'get',
+        'id' => 'apple-eat',
+        'method' => 'post',
         'action' => ['eat'],
     ]); ?>
 
@@ -22,7 +23,8 @@ $this->title = 'Enter percentage of apple bite off:';
 
         <?= Html::hiddenInput('id',Yii::$app->request->get('id'))?>
 
-        <?= Html::input('text','part') ?>
+        <?= Html::input('text', 'part', '', ['class' => 'apple-part']) ?>
+
 
         <?= Html::submitButton('Eat', ['class' => 'btn btn-success']) ?>
 

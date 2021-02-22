@@ -3,6 +3,7 @@
 namespace backend\controllers;
 
 use app\models\Apple;
+use Exception;
 use Yii;
 use app\models\Apples;
 use backend\models\ApplesSearch;
@@ -83,18 +84,25 @@ class ApplesController extends Controller
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
-    public function actionEat(int $id, int $part)
+    public function actionEat()
     {
+        $id = Yii::$app->request->post('id');
+        $part = Yii::$app->request->post('part');
         $apple = Apple::find()->where(['id' => $id])->one();
-        $apple->eat($part);
-        return $this->redirect(['index']);
+        try {
+            $apple->eat($part);
+        } catch (Exception $e) {
+            Yii::$app->response->setStatusCode(500);
+            return $this->asJson(['message' => $e->getMessage()]);
+//            Yii::$app->session->setFlash('error', $e->getMessage());
+        }
+        return $this->asJson(['message' => ' done']);
 
     }
 
-    public function actionModal($id)
+    public function actionModal()
     {
-        $model = Apple::find()->where(['id' => $id])->one();
-        return $this->renderAjax('modalEat', ['model' => $model]);
+        return $this->renderAjax('modalEat');
     }
 
     /**
@@ -104,7 +112,11 @@ class ApplesController extends Controller
     public function actionFall(int $id)
     {
         $apple = Apple::find()->where(['id' => $id])->one();
-        $apple->fall();
+        try {
+            $apple->fall();
+        } catch (Exception $e) {
+            Yii::$app->session->setFlash(\dominus77\sweetalert2\Alert::TYPE_ERROR, $e->getMessage());
+        }
         return $this->redirect(['index']);
 
     }

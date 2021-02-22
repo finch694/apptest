@@ -2,6 +2,7 @@
 
 namespace backend\models;
 
+use app\models\Apple;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
 use app\models\Apples;
@@ -41,7 +42,7 @@ class ApplesSearch extends Apples
      */
     public function search($params)
     {
-        $query = Apples::find();
+        $query = Apple::find();
 
         // add conditions that should always apply here
 

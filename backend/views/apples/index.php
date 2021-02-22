@@ -1,6 +1,6 @@
 <?php
 
-use yii\helpers\Html;
+use yii\grid\ActionColumn;use yii\helpers\Html;
 use yii\grid\GridView;
 use backend\assets\ModalAsset;
 use yii\widgets\Pjax;
@@ -15,8 +15,6 @@ $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="apples-index">
 
-    <h1><?= Html::encode($this->title) ?></h1>
-
     <p>
         <?= Html::a('Create Apples', ['create'], ['class' => 'btn btn-success']) ?>
     </p>
@@ -27,6 +25,12 @@ $this->params['breadcrumbs'][] = $this->title;
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
+        'formatter' => [
+            'class' => 'yii\i18n\Formatter',
+            'dateFormat' => 'dd MM yy',
+            'defaultTimeZone' => 'Europe/Kiev',
+            'datetimeFormat' => 'php: d.m.y | H:i',
+        ],
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
 
@@ -49,16 +53,13 @@ $this->params['breadcrumbs'][] = $this->title;
                     );
                 }
             ],
-//            'status_id',
             [
-                'attribute' => 'status_id',
+                'attribute' => 'status.status_name',
                 'label' => 'status',
-                'content' => function ($model) {
-//                    var_dump($model->status->status_name);
-                    return $model->status->status_name;
-                },
+//                'content' => function ($model) {
+//                    return $model->status->status_name;
+//                },
             ],
-//            'integrity',
             [
                 'attribute' => 'integrity',
                 'content' => function ($model) {
@@ -67,15 +68,14 @@ $this->params['breadcrumbs'][] = $this->title;
             ],
             'createAt:datetime',
             'fallAt:datetime',
-//sweetalert
             [
-                'class' => 'yii\grid\ActionColumn',
+                'class' => ActionColumn::class,
                 'template' => '{view} {delete} {modal} {fall}',
                 'buttons' => [
-                    'modal' => function ($url, $model, $key) {
+                    'modal' => function ($url) {
                         return Html::a('<i class="glyphicon glyphicon-apple"></i>', $url, ['class' => 'modal-eat']);
                     },
-                    'fall' => function ($url, $model, $key) {
+                    'fall' => function ($url) {
                         return Html::a('<i class="glyphicon glyphicon-tree-deciduous"></i>', $url);
                     }
                 ],
@@ -86,20 +86,4 @@ $this->params['breadcrumbs'][] = $this->title;
     <?php Pjax::end(); ?>
 
 </div>
-<div class="modal fade bd-example-modal-sm" id="modal-eat" tabindex="-1" role="dialog"
-     aria-labelledby="mySmallModalLabel"
-     aria-hidden="true">
-    <div class="modal-dialog modal-sm">
-        <div class="modal-content">
-            <div class="modal-body">
-                <form>
-                    <div class="form-group">
-                        <label for="recipient-name" class="col-form-label">Enter percentage of apple bite off:</label>
-                        <input type="text" class="form-control" id="recipient-name">
-                    </div>
-                </form>
-                <button type="button" class="btn btn-primary">Bite off</button>
-            </div>
-        </div>
-    </div>
-</div>
+<?= $this->render('../layouts/_modal-template', ['id' => 'modal-eat']) ?>

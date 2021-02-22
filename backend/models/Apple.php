@@ -5,6 +5,7 @@ namespace app\models;
 
 use backend\components\EatableInterface;
 use backend\components\EatFactory;
+use Exception;
 
 /**
  */
@@ -15,8 +16,8 @@ class Apple extends Apples
      */
     private $eatBehavior;
 
-    private const TIME_TO_FALL = 10;
-    private const BASIC_CHANCE_TO_FALL = 0.1;
+    const TIME_TO_FALL = 10 * 3600;
+    const TIME_TO_SPOIL = 5 * 3600;
 
     /**
      * @return bool
@@ -30,19 +31,26 @@ class Apple extends Apples
     {
         $this->color = $this->randomColor();
         $this->status_id = 1;
+//        var_dump($this);
+//        exit();
         parent::__construct($config);
     }
 
     public function fall()
     {
-        $this->status_id = 2;
-        $this->fallAt = time();
+        if ($this->status_id == 1) {
+            $this->status_id = 2;
+            $this->fallAt = time();
+        } else {
+            throw new Exception('apple is not on the tree');
+        }
         $this->save();
     }
 
-    public function accidentalFall()
+    private function accidentalFall() //TODO remake accidental fall
     {
-        if (rand(0, time() - $this->createAt) < self::TIME_TO_FALL * 3600 * self::BASIC_CHANCE_TO_FALL) {
+        if ($this->status_id == 1 &&
+            rand(0, self::TIME_TO_FALL) < time() - $this->createAt) {
             $this->fall();
         }
     }
@@ -64,13 +72,12 @@ class Apple extends Apples
         }
     }
 
-
-    public function getColor()
+    public function getColor(): string
     {
         return $this->color;
     }
 
-    private function randomColor()
+    private function randomColor(): string
     {
         return sprintf('#%02X%02X%02X', rand(100, 255), rand(100, 255), '80');
     }

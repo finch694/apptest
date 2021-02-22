@@ -10,7 +10,7 @@ class EatFactory
 {
     public function detectEatBehavior(Apple $apple)
     {
-        return $apple->isFallen() && $apple->integrity > 0 ? new BasicEat() : new ForbiddenEat();
+        return $apple->isFallen() && time() - $apple->fallAt < $apple::TIME_TO_SPOIL ?
+            new BasicEat() : new ForbiddenEat();
     }
-
 }
